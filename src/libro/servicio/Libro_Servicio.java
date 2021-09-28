@@ -7,18 +7,17 @@ Por último, indicar cuál de los 2 tiene más páginas.
  */
 package libro.servicio;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
 import libro.Libro;
 
 public class Libro_Servicio {
 
     Libro libro;
-    HashMap<String, Libro> mapLibro;
+    HashSet<Libro> hashSetlibros;
 
     public Libro_Servicio() {
-        //libro = new Libro();
-        mapLibro = new HashMap();
+        hashSetlibros = new HashSet();
     }
 
     public void crearLibro(long isbn, String titulo, String autor, Integer numPaginas) throws Exception {
@@ -49,26 +48,27 @@ public class Libro_Servicio {
     }
 
     public Boolean duplicidadIsbn(long isbn) throws Exception {
-
-        return (mapLibro.containsKey(String.valueOf(isbn)));
-
+        for (Libro libro1 : hashSetlibros) {
+            if (libro1.getIsbn() == isbn) {
+                throw new Exception("El ISBN " + isbn + " ya existe en la lista de libros.");
+            }
+        }
+        return false;
     }
 
     public void agregarLibros(Libro libro) throws Exception {
-
-        mapLibro.put(String.valueOf(libro.getIsbn()), libro);
-
+        hashSetlibros.add(libro);
     }
 
     public void mostrarLibros() {
         System.out.println("--------------Lista de libros (sin ordenar)--------------------");
-        mapLibro.forEach((key, value) -> System.out.println(value));
+        hashSetlibros.forEach((value) -> System.out.println(value));
         System.out.print("\n");
     }
 
     public void mostrarListaOrdenada() {
         System.out.println("--------------Lista de libros ordenada por precio--------------------");
-        mapLibro.values().stream()
+        hashSetlibros.stream()
                 .sorted(Libro.compararCantidadPaginasAsc)
                 .forEach((value) -> System.out.println(value));
         System.out.print("\n");
@@ -76,7 +76,7 @@ public class Libro_Servicio {
 
     public void libroConMasPaginas() {
         System.out.println("--------------Libro con mayor precio--------------------");
-        Optional<Libro> optional = mapLibro.values().stream().max(Libro.compararCantidadPaginasDesc);
+        Optional<Libro> optional = hashSetlibros.stream().max(Libro.compararCantidadPaginasDesc);
         Libro libroMasPaginas = optional.get();
         System.out.println(libroMasPaginas);
         System.out.print("\n");
