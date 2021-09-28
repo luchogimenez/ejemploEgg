@@ -8,6 +8,7 @@ Por último, indicar cuál de los 2 tiene más páginas.
 package libro.servicio;
 
 import java.util.HashMap;
+import java.util.Optional;
 import libro.Libro;
 
 public class Libro_Servicio {
@@ -60,23 +61,25 @@ public class Libro_Servicio {
     }
 
     public void mostrarLibros() {
+        System.out.println("--------------Lista de libros (sin ordenar)--------------------");
         mapLibro.forEach((key, value) -> System.out.println(value));
+        System.out.print("\n");
     }
 
-    public void libroConMasPaginas() {
-        System.out.println("--------------lista ordenada--------------------");
+    public void mostrarListaOrdenada() {
+        System.out.println("--------------Lista de libros ordenada por precio--------------------");
         mapLibro.values().stream()
                 .sorted(Libro.compararCantidadPaginasAsc)
                 .forEach((value) -> System.out.println(value));
-               
-        System.out.println("--------------maximo--------------------");
-        System.out.println(mapLibro.values().stream().max(Libro.compararCantidadPaginasDesc));
-        //mostrarLibros();
-
-
+        System.out.print("\n");
     }
 
-    
-
+    public void libroConMasPaginas() {
+        System.out.println("--------------Libro con mayor precio--------------------");
+        Optional<Libro> optional = mapLibro.values().stream().max(Libro.compararCantidadPaginasDesc);
+        Libro libroMasPaginas = optional.get();
+        System.out.println(libroMasPaginas);
+        System.out.print("\n");
+    }
 
 }
